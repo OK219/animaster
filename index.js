@@ -204,10 +204,46 @@ function animaster() {
             return this;
         },
 
+        addScale: function (...args) {
+            this._steps.push({
+                'name': 'scale',
+                'duration': args[0],
+                'ratio': args[1],
+            })
+            return this;
+        },
+
+        addFadeIn: function (...args) {
+            this._steps.push({
+                'name': 'fadeIn',
+                'duration': args[0],
+            })
+            return this;
+        },
+
+        addFadeOut: function (...args) {
+            this._steps.push({
+                'name': 'fadeOut',
+                'duration': args[0],
+            })
+            return this;
+        },
+
         play: function play(element) {
-            const step =  this._steps.pop()
-            if (step.name === 'move') {
-                this.move(element, step.duration, step.translation);
+            while(this._steps.length > 0) {
+                const step =  this._steps.pop()
+                if (step.name === 'move') {
+                    this.move(element, step.duration, step.translation);
+                }
+                else if (step.name === 'scale') {
+                    this.scale(element, step.translation, step.ratio);
+                }
+                else if (step.name === 'fadeIn') {
+                    this.fadeIn(element, step.duration);
+                }
+                else if (step.name === 'fadeInOut') {
+                    this.fadeOut(element, step.duration);
+                }
             }
         }
     }
