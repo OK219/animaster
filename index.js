@@ -17,7 +17,7 @@ function addListeners() {
     document.getElementById('movePlay')
         .addEventListener('click', function () {
             const block = document.getElementById('moveBlock');
-            animaster().move(block, 1000, {x: 100, y: 10});
+            animaster().addMove(500, {x: 20, y:20}).play(block);
         });
 
     document.getElementById('moveReset')
@@ -115,6 +115,8 @@ function getTransform(translation, ratio) {
 
 function animaster() {
     return {
+        _steps: [],
+
         move: function move(element, duration, translation) {
             element.style.transitionDuration = `${duration}ms`;
             element.style.transform = getTransform(translation, null);
@@ -191,6 +193,22 @@ function animaster() {
                     clearInterval(interval); 
                 }
             };
+        },
+
+        addMove: function (...args) {
+            this._steps.push({
+                'name': 'move',
+                'duration': args[0],
+                'translation': args[1],
+            })
+            return this;
+        },
+
+        play: function play(element) {
+            const step =  this._steps.pop()
+            if (step.name === 'move') {
+                this.move(element, step.duration, step.translation);
+            }
         }
     }
 }
